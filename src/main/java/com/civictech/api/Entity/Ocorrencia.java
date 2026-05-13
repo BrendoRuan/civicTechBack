@@ -3,7 +3,10 @@ package com.civictech.api.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
+@Table(name = "ocorrencias")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,6 +19,7 @@ public class Ocorrencia {
 
     private String titulo;
 
+    @Column(columnDefinition = "TEXT")
     private String descricao;
 
     private String categoria;
@@ -25,4 +29,17 @@ public class Ocorrencia {
     private Double latitude;
 
     private Double longitude;
+
+    private String nomeUsuario;
+
+    private LocalDateTime dataCriacao;
+
+    @PrePersist
+    public void prePersist() {
+        dataCriacao = LocalDateTime.now();
+
+        if(status == null) {
+            status = "ABERTO";
+        }
+    }
 }
