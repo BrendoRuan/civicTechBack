@@ -1,5 +1,5 @@
 package com.civictech.api.Entity;
-
+import com.civictech.api.Enum.StatusOcorrencia;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,7 +24,8 @@ public class Ocorrencia {
 
     private String categoria;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private StatusOcorrencia status;
 
     private Double latitude;
 
@@ -32,14 +33,20 @@ public class Ocorrencia {
 
     private String nomeUsuario;
 
+    // NOVOS CAMPOS
+    private String imagemUrl;
+
+    private String videoUrl;
+
     private LocalDateTime dataCriacao;
 
     @PrePersist
     public void prePersist() {
+
         dataCriacao = LocalDateTime.now();
 
-        if(status == null) {
-            status = "ABERTO";
+        if (status == null) {
+            status = StatusOcorrencia.EM_ANALISE;
         }
     }
 }

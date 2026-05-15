@@ -1,5 +1,4 @@
 package com.civictech.api.Entity;
-
 import jakarta.persistence.*;
 import lombok.*;
 
