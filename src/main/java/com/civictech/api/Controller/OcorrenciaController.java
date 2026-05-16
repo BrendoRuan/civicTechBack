@@ -73,7 +73,7 @@ public class OcorrenciaController {
         file.transferTo(destino);
 
         String url =
-                "http://localhost:8080/uploads/imagens/" + nomeArquivo;
+                "https://civictechback.onrender.com/uploads/imagens/" + nomeArquivo;
 
         return ResponseEntity.ok(url);
     }
@@ -92,7 +92,7 @@ public class OcorrenciaController {
         file.transferTo(destino);
 
         String url =
-                "http://localhost:8080/uploads/videos/" + nomeArquivo;
+                "https://civictechback.onrender.com/uploads/videos/" + nomeArquivo;
 
         return ResponseEntity.ok(url);
     }
