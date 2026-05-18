@@ -79,40 +79,60 @@ public class OcorrenciaController {
 
         try {
 
-            // CRIA PASTA
-            File pasta = new File("uploads/imagens");
+            // DIRETÓRIO ABSOLUTO
+            String diretorio =
+                    System.getProperty("java.io.tmpdir")
+                            + File.separator
+                            + "uploads"
+                            + File.separator
+                            + "imagens";
 
+            File pasta = new File(diretorio);
+
+            // GARANTE QUE A PASTA EXISTA
             if (!pasta.exists()) {
-                pasta.mkdirs();
+
+                boolean criada = pasta.mkdirs();
+
+                System.out.println(
+                        "PASTA CRIADA: " + criada
+                );
             }
 
             // NOME ÚNICO
             String nomeArquivo =
-                    UUID.randomUUID() + "_" +
-                            file.getOriginalFilename();
+                    UUID.randomUUID()
+                            + "_"
+                            + file.getOriginalFilename();
 
-            // DESTINO
-            File destino = new File(
-                    pasta,
-                    nomeArquivo
+            // ARQUIVO FINAL
+            File destino =
+                    new File(
+                            pasta,
+                            nomeArquivo
+                    );
+
+            System.out.println(
+                    "CAMINHO FINAL: "
+                            + destino.getAbsolutePath()
             );
 
-            // SALVA
+            // SALVA ARQUIVO
             file.transferTo(destino);
 
-            // URL
+            // URL PÚBLICA
             String url =
                     "https://civictechback.onrender.com/uploads/imagens/"
                             + nomeArquivo;
 
-            // RETORNA JSON
             return ResponseEntity.ok(
                     Map.of(
-                            "url", url
+                            "url",
+                            url
                     )
             );
 
-        } catch (IOException e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
 
@@ -121,7 +141,7 @@ public class OcorrenciaController {
                     .body(
                             Map.of(
                                     "erro",
-                                    "Erro ao enviar imagem"
+                                    e.getMessage()
                             )
                     );
         }

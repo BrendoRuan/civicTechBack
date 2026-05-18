@@ -4,16 +4,27 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.io.File;
+
 @Configuration
-public class UploadConfig implements WebMvcConfigurer {
+public class UploadConfig
+        implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(
             ResourceHandlerRegistry registry
     ) {
 
+        String caminho =
+                System.getProperty("java.io.tmpdir")
+                        + File.separator
+                        + "uploads"
+                        + File.separator;
+
         registry
                 .addResourceHandler("/uploads/**")
-                .addResourceLocations("file:uploads/");
+                .addResourceLocations(
+                        "file:" + caminho
+                );
     }
 }
