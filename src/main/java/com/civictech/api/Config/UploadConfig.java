@@ -1,7 +1,8 @@
 package com.civictech.api.Config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class UploadConfig implements WebMvcConfigurer {
@@ -11,7 +12,8 @@ public class UploadConfig implements WebMvcConfigurer {
             ResourceHandlerRegistry registry
     ) {
 
-        registry.addResourceHandler("/uploads/**")
+        registry
+                .addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");
     }
 }
