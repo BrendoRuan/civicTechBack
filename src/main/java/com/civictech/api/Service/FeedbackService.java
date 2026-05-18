@@ -44,7 +44,7 @@ public class FeedbackService {
         Feedback feedback = buscarPorId(id);
 
         feedback.setNomeUsuario(dados.getNomeUsuario());
-        feedback.setMensagem(dados.getMensagem());
+        feedback.setComentario(dados.getComentario());
         feedback.setNota(dados.getNota());
 
         return repository.save(feedback);

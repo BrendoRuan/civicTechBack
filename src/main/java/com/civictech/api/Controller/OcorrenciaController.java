@@ -4,17 +4,15 @@ import com.civictech.api.Entity.Ocorrencia;
 import com.civictech.api.Enum.StatusOcorrencia;
 import com.civictech.api.Service.OcorrenciaService;
 
-import org.springframework.web.bind.annotation.*;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
-
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/ocorrencias")
@@ -32,6 +30,7 @@ public class OcorrenciaController {
     // LISTAR
     @GetMapping("/listar")
     public List<Ocorrencia> listar() {
+
         return service.listar();
     }
 
@@ -40,6 +39,7 @@ public class OcorrenciaController {
     public Ocorrencia buscarPorId(
             @PathVariable Long id
     ) {
+
         return service.buscarPorId(id);
     }
 
@@ -48,6 +48,7 @@ public class OcorrenciaController {
     public List<Ocorrencia> buscarPorTitulo(
             @RequestParam String titulo
     ) {
+
         return service.buscarPorTitulo(titulo);
     }
 
@@ -56,45 +57,95 @@ public class OcorrenciaController {
     public Ocorrencia criar(
             @RequestBody Ocorrencia ocorrencia
     ) {
+
         return service.criar(ocorrencia);
     }
+
+    // UPLOAD IMAGEM
     @PostMapping("/upload/imagem")
     public ResponseEntity<String> uploadImagem(
             @RequestParam("file") MultipartFile file
-    ) throws IOException {
+    ) {
 
-        String nomeArquivo =
-                UUID.randomUUID() + "_" + file.getOriginalFilename();
+        try {
 
-        File destino = new File(
-                "uploads/imagens/" + nomeArquivo
-        );
+            // CRIA NOME ÚNICO
+            String nomeArquivo =
+                    UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-        file.transferTo(destino);
+            // CRIA PASTA
+            File pasta = new File("uploads/imagens");
 
-        String url =
-                "https://civictechback.onrender.com/uploads/imagens/" + nomeArquivo;
+            if (!pasta.exists()) {
 
-        return ResponseEntity.ok(url);
+                pasta.mkdirs();
+            }
+
+            // ARQUIVO FINAL
+            File destino = new File(
+                    pasta,
+                    nomeArquivo
+            );
+
+            // SALVA ARQUIVO
+            file.transferTo(destino);
+
+            // URL FINAL
+            String url =
+                    "https://civictechback.onrender.com/uploads/imagens/"
+                            + nomeArquivo;
+
+            return ResponseEntity.ok(url);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+            return ResponseEntity
+                    .internalServerError()
+                    .body("Erro ao enviar imagem");
+        }
     }
+
+    // UPLOAD VIDEO
     @PostMapping("/upload/video")
     public ResponseEntity<String> uploadVideo(
             @RequestParam("file") MultipartFile file
-    ) throws IOException {
+    ) {
 
-        String nomeArquivo =
-                UUID.randomUUID() + "_" + file.getOriginalFilename();
+        try {
 
-        File destino = new File(
-                "uploads/videos/" + nomeArquivo
-        );
+            String nomeArquivo =
+                    UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-        file.transferTo(destino);
+            File pasta = new File("uploads/videos");
 
-        String url =
-                "https://civictechback.onrender.com/uploads/videos/" + nomeArquivo;
+            if (!pasta.exists()) {
 
-        return ResponseEntity.ok(url);
+                pasta.mkdirs();
+            }
+
+            File destino = new File(
+                    pasta,
+                    nomeArquivo
+            );
+
+            file.transferTo(destino);
+
+            String url =
+                    "https://civictechback.onrender.com/uploads/videos/"
+                            + nomeArquivo;
+
+            return ResponseEntity.ok(url);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+            return ResponseEntity
+                    .internalServerError()
+                    .body("Erro ao enviar vídeo");
+        }
     }
 
     // ATUALIZAR
@@ -103,6 +154,7 @@ public class OcorrenciaController {
             @PathVariable Long id,
             @RequestBody Ocorrencia ocorrencia
     ) {
+
         return service.atualizar(id, ocorrencia);
     }
 
@@ -114,7 +166,9 @@ public class OcorrenciaController {
     ) {
 
         StatusOcorrencia status =
-                StatusOcorrencia.valueOf(body.get("status"));
+                StatusOcorrencia.valueOf(
+                        body.get("status")
+                );
 
         return service.alterarStatus(id, status);
     }
@@ -124,6 +178,7 @@ public class OcorrenciaController {
     public void deletar(
             @PathVariable Long id
     ) {
+
         service.deletar(id);
     }
 }
